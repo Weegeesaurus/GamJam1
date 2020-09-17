@@ -1,0 +1,6 @@
+0.0.1 - Network test
+Notes:
+network functions very well when not lagging
+bullets lagging are very common, movement is fine when not lagging
+Players joining in midgame break due to improper SendIntoGame() code
+0.0.2 - Lobby System, personal Cameras, Client-Side bullet prediction
