@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class CheckpointText : MonoBehaviour
 {
     public bool active = false;
-    private float fadeTime;
     public float timeVisible;
     public float floatSpeed;
+    private float fadeTime;
 
     private RectTransform tf;
     private Text txt;
@@ -27,28 +27,29 @@ public class CheckpointText : MonoBehaviour
     {
         if (active)
         {
-            if (fadeTime < 3*(timeVisible/4))
+            if (fadeTime < 3*(timeVisible/4))   //start moving after 25% of time has passed
             {
                 tf.position = new Vector3(tf.position.x, tf.position.y + floatSpeed * Time.deltaTime, tf.position.z);
-                if (fadeTime < 2*timeVisible/3)
+
+                if (fadeTime < 2*timeVisible/3) //start fading after 33% of time has passed
                 {
                     txt.color = new Color(txt.color.r, txt.color.g, txt.color.b, fadeTime/(timeVisible/2));
                     if (txt.color.a <= 0)
                     {
-                        //active = false;
+                        active = false; //if the text is completely invisible, stop
                     }
                 }
             }
-            fadeTime -= Time.deltaTime;
+            fadeTime -= Time.deltaTime; //continue counting down
         }
     }
 
     public void Activate()
     {
-        fadeTime = timeVisible;
+        fadeTime = timeVisible;     //resets timer
         active = true;
-        tf.position = startPos;
-        txt.color = new Color(txt.color.r, txt.color.g, txt.color.b, 1);
+        tf.position = startPos;     //resets position
+        txt.color = new Color(txt.color.r, txt.color.g, txt.color.b, 1);    //resets transparency
     }
     public void ChangeText(string text)
     {

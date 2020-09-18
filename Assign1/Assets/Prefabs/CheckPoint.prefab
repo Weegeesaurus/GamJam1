@@ -97,9 +97,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   checkpoint: 1
   active: 0
+  finalPoint: 0
   flashbang: 6
   startingGlow: 1.5
-  checkpointText: {fileID: 0}
 --- !u!135 &4743969685307329982
 SphereCollider:
   m_ObjectHideFlags: 0

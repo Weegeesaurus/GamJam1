@@ -15,8 +15,10 @@ public class Rotator : MonoBehaviour
 
     void Update()
     {
+        //rotate the object
         transform.Rotate(new Vector3(15, 30, 45) * Time.deltaTime);
 
+        //make it float up and down
         transform.position = new Vector3(transform.position.x, startY+ myCurve.Evaluate(Time.time % (myCurve.length+1))-.6f, transform.position.z);
     }
 }

@@ -17,10 +17,4 @@ public class BlurRenderer : MonoBehaviour
         blurCamera.targetTexture = new RenderTexture(Screen.width, Screen.height, 24, RenderTextureFormat.ARGB32, 1);
         blurMaterial.SetTexture("_RenTex", blurCamera.targetTexture);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

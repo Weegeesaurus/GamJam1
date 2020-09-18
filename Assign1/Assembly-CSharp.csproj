@@ -63,14 +63,12 @@
      <Compile Include="Assets\Scripts\PlayRandomPitch.cs" />
      <Compile Include="Assets\Scripts\QuitGame.cs" />
      <Compile Include="Assets\Scripts\MovingPlatform.cs" />
+     <Compile Include="Assets\Scripts\PauseMenu.cs" />
      <Compile Include="Assets\Scripts\Checkpoint.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
      <Compile Include="Assets\Scripts\Rotator.cs" />
-     <Compile Include="Assets\PauseMenu.cs" />
-     <Compile Include="Assets\PlayerController2.cs" />
      <Compile Include="Assets\Scripts\OceanWave.cs" />
      <Compile Include="Assets\Scripts\CheckpointText.cs" />
-     <Compile Include="Assets\Scripts\PLay2.cs" />
      <Compile Include="Assets\Scripts\JumpPad.cs" />
  <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
  <HintPath>D:/UserFiles/Documents/GitHub/GamJam1/Assign1/Library/ScriptAssemblies/Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>

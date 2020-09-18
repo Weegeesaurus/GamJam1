@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -12,17 +10,18 @@ public class PlayerController : MonoBehaviour
     //movement
     public float speed;
     public float jumpPower = 10;
-    private Vector3 movement;   //movement direction from input
-    private float distToGround; //default distance from ground
+    private Vector3 movement;       //movement direction from input
+    private float distToGround;     //default distance from ground
     private bool canJump = true;
     private float jumpCooldown = .1f;   //prevents the jump function being called many times in a second
 
     //gameplay
-    public int checkpoint = 0;
+    public int checkpoint = 0;      //current checkpoint
     public int score=0;
+    [SerializeField]
     private bool dead = false;          //is player dead?
     public float respawnTime = 3;
-    private float fade = 0f;    //fade for death
+    private float fade = 0f;    //timer for dissolving animation
 
     //UI
     public Text scoreText;
@@ -31,7 +30,7 @@ public class PlayerController : MonoBehaviour
     //Systems
     private Rigidbody rb;
     private MeshRenderer render;
-    private Material mat;
+    private Material mat;           //colors and texture
 
 
 
@@ -41,10 +40,10 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         dead = false;
-        UpdateScore(0); //sets up the UI
+        UpdateScore(0);                     //sets up the UI incase its messed up in the editor
         rb = GetComponent<Rigidbody>();
         render = GetComponent<MeshRenderer>();
-        mat = render.material;      //get the material
+        mat = render.material;              //get the material
 
         distToGround = (float)GetComponent<SphereCollider>().bounds.extents.y;  //calculates dist from ground
     }
@@ -68,17 +67,18 @@ public class PlayerController : MonoBehaviour
             {
                 rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
                 canJump = false;
-                Invoke("JumpRestore", jumpCooldown);
+                Invoke("JumpRestore", jumpCooldown);    //restores the jump after a certain cooldown
             }
         }
 
         if (dead)
         {
-            fade += Time.deltaTime / respawnTime;  //dissolve the player model
-            mat.SetFloat("_Fade", fade);
+            fade += Time.deltaTime / respawnTime;   //progress dissolve animation over time
+            mat.SetFloat("_Fade", fade);            //dissolve the player model
         }
 
         speedText.text = Mathf.RoundToInt(rb.velocity.magnitude * 5).ToString();  //sets the UI speed
+        //^^left this in FixedUpdate for performance as speed is determined every FixedUpdate
     }
 
     private void OnTriggerEnter(Collider other)
@@ -87,24 +87,25 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.GetComponent<CoinPickUp>().Pickup(gameObject);
         }
-        if (other.gameObject.CompareTag("Destructable"))  //when picking up a "coin"
+
+        if (other.gameObject.CompareTag("Destructable"))  //when rolling over a destructable
         {
-            other.gameObject.GetComponent<CarrotDestroy>().Pickup(gameObject);
+            other.gameObject.GetComponent<CarrotDestroy>().Pickup(gameObject);  //this is hard coded to the carrot
         }
 
-        if (other.gameObject.CompareTag("Water") && !dead)  //when picking up a "coin"
+        if (other.gameObject.CompareTag("Water") && !dead)  //when touching the water killbox
         {
-            rb.useGravity = false;
+            rb.useGravity = false;  //turns off gravity
             dead = true;
             rb.AddForce(Vector3.up * 4f, ForceMode.Impulse);    //bounces the player upward, "float back up"
             Invoke("Respawn", respawnTime);                     //start respawn
         }
 
-        if (other.gameObject.CompareTag("Checkpoint"))  //checkpoint
+        if (other.gameObject.CompareTag("Checkpoint"))  //when touching checkpoint
         {
-            if (other.gameObject.GetComponent<Checkpoint>().Activate(checkpoint))   //try to activate the checkpoint
+            if (other.gameObject.GetComponent<Checkpoint>().Activate(checkpoint))   //if the checkpoint activates successfully
             {
-                checkpoint = other.gameObject.GetComponent<Checkpoint>().checkpoint;    //set new checkpoint
+                checkpoint = other.gameObject.GetComponent<Checkpoint>().checkpointNum;    //set new checkpoint
 
                 GameObject[] checks = GameObject.FindGameObjectsWithTag("Checkpoint");  //get all other checkpoints
                 foreach (GameObject obj in checks)                                      //sort through all other ones
@@ -115,26 +116,26 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    public void UpdateScore(int num)    //updates and addes to the score
+    public void UpdateScore(int num)    //updates and adds to the score
     {
         score += num;
         scoreText.text = "Score: " + score.ToString();
     }
 
-    private void JumpRestore()    //updates and addes to the score
+    private void JumpRestore()    //refreshes the jump
     {
         canJump = true;
     }
 
     public void Respawn()
     {
-        rb.useGravity = true;
-        rb.velocity = Vector3.zero;
+        rb.useGravity = true;       //reactivate gravity
+        rb.velocity = Vector3.zero; //reset player velocity
 
         GameObject[] checks = GameObject.FindGameObjectsWithTag("Checkpoint");  //find the checkpoint we are at
         foreach (GameObject obj in checks)
         {
-            if (obj.GetComponent<Checkpoint>().checkpoint == checkpoint)
+            if (obj.GetComponent<Checkpoint>().checkpointNum == checkpoint) //looking for the right one
             {
                 transform.position = obj.transform.position;    //teleport to the checkpoint
             }
@@ -142,11 +143,11 @@ public class PlayerController : MonoBehaviour
         }
 
         dead = false;
-        fade = 0;
+        fade = 0;           //reset the dissolve progress for later
         mat.SetFloat("_Fade", 0);   //undissolve the player model
     }
 
-    private bool IsGrounded()  //checks if the player is on thr ground
+    private bool IsGrounded()  //checks if the player is on the ground
     {
         RaycastHit hit;
         if (Physics.Raycast(transform.position, -Vector3.up, out hit ,distToGround + 0.1f)) //raycast to check for collision
@@ -159,7 +160,7 @@ public class PlayerController : MonoBehaviour
     return false;
     }
 
-    void OnTriggerStay(Collider other)
+    void OnTriggerStay(Collider other)  //attach the player to the platform
     {
 
         if (other.gameObject.tag == "Moving Platform")
@@ -169,11 +170,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)  //detach the player from the platform
     {
         if (other.gameObject.tag == "Moving Platform")
         {
-            transform.parent = null;
+            transform.parent = null;    //not the cleanest method but it works for small scale projects
 
         }
     }

@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -19,13 +18,13 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;       //locks the players cursor
+        Cursor.visible = false;                         //makes the cursor invisible
         paused = false;
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab))  //press tab or esc to bring up the menu
         {
             Pause();
         }
@@ -33,7 +32,7 @@ public class CameraController : MonoBehaviour
         Vector2 controlInput = new Vector2(Input.GetAxis("Mouse X")*rotateSpeed, Input.GetAxis("Mouse Y")*rotateSpeed);     //combines the player input
         if (paused)
         {
-            controlInput = Vector2.zero;
+            controlInput = Vector2.zero;    //if the game is "paused" replace the player input with 0
         }
 
         xRotation += Mathf.Repeat(controlInput.x, 360.0f);      //allows for constant 360 rotation
@@ -52,13 +51,13 @@ public class CameraController : MonoBehaviour
 
     }
 
-    public void Pause()
+    public void Pause()     //pauses the game
     {
-        paused = !paused;
+        paused = !paused;   //toggle
         pauseMenu.GetComponent<PauseMenu>().ShowMenu();
-        Cursor.visible = !Cursor.visible;
+        Cursor.visible = !Cursor.visible;   //toggle cursor visibility
 
-        if (Cursor.lockState == CursorLockMode.None)
+        if (Cursor.lockState == CursorLockMode.None)    //toggles the player cursor lock
         {
             Cursor.lockState = CursorLockMode.Locked;
         }

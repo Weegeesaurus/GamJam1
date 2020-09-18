@@ -8,9 +8,10 @@ public class MovingPlatform : MonoBehaviour
     public Transform platform;
     public Transform point1;
     public Transform point2;
-    private Vector3 targetVector;
-    public int targetPoint = 2;
+    public int targetPoint = 2;     //current destination
     public int moveSpeed = 2;
+
+    private Vector3 targetVector;
 
     // Start is called before the first frame update
     void Start()
@@ -46,11 +47,9 @@ public class MovingPlatform : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        // Draw a semitransparent blue cube at the transforms position
+        // Draw a semitransparent red cube at the transforms position
         Gizmos.color = new Color(1, 0, 0, 0.5f);
         Gizmos.DrawCube(point1.position, new Vector3(2, .5f, 2));
         Gizmos.DrawCube(point2.position, new Vector3(2, .5f, 2));
-        //Handles.Label(point1.position, "1");
-        //Handles.Label(point2.position, "2");
     }
 }
