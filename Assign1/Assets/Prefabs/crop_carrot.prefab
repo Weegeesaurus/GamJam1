@@ -109,4 +109,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b1893a02c191de419ef7d50f1a9d110, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PickupEffect: {fileID: 5493857762690846252, guid: 97f6a2352627ac048824e3f989ca122b, type: 3}
+  DestroyEffect: {fileID: 5493857762690846252, guid: 97f6a2352627ac048824e3f989ca122b, type: 3}
